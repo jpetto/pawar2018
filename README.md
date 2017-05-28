@@ -2,14 +2,19 @@
 
 ## Getting started (Mac)
 1. Install Docker (www.docker.com)
-2. Install the latest version of Node - currently 6.10.3 (https://nodejs.org/en/download/package-manager) or update your version - if `node -v` comes back as <6 (http://stackoverflow.com/questions/8191459/how-do-i-update-node-js)
-3. Clone the repo `git clone git@github.com:pawar-2018/pawar2018.git`
-4. Start the docker container `docker-compose up -d`
+2. [Install the latest version of Node](https://nodejs.org/en/download/package-manager/#osx) (currently 6.10.3). If you already have node installed, make sure you're on version 6 or above. If `node -v` comes back as < 6, [you'll need to update](http://stackoverflow.com/questions/8191459/how-do-i-update-node-js).
+3. Clone the repo
+```
+git clone git@github.com:pawar-2018/pawar2018.git
+```
+4. Start the docker container
+```
+docker-compose up -d
+```
 5. In another terminal tab, `cd` in to your local clone of the repo and run `npm install`.
-6. To start your dev server, run `npm start`. This proxies from localhost:8000, which is where Docker is running, so you do need Docker from step 3 running as well.
-7. You might need to restart your vms (docker-compose restart) if you are getting a pawar2018 not found error
-8. If you're just running onto merge conficts or want to make sure you build before pushing (this will be fixed when we get deployment more figured out, sorry, because this will get annoying really fast) you can just run `npm run build`.
-9. Go through the Wordpress Installation and then head to "Setting up Wordpress Locally"
+6. To start your dev server, run `npm start`. This proxies from **localhost:8000**, which is where Docker is running, so you do need Docker from step 3 running.
+  - If you are getting a pawar2018 not found error, you might need to restart your Docker containers by running `docker-compose restart`
+9. Go through the WordPress Installation and then head to "Setting up Wordpress Locally" below. Note that the site title/description and login info you enter when setting up WordPress will be replaced when you sync the database.
 
 ## Getting started (Windows)
 1. Install Docker Toolbox on Windows (https://docs.docker.com/toolbox/toolbox_install_windows/), you'll need Python installed
@@ -61,14 +66,16 @@ with docker-machine ip
 
 ### Importing Content
 
-Currently, the quickest way to get the content is to export an XML copy of the
-staging site's content and import into your local Wordpress. It sucks. We know. We're working on it.
+Currently, the quickest way to get the content is to sync with the staging site using the WP DB Migrate plugin.
 
-1. Get Mica or John to give you a Staging Login. They can be Slacked.
-2. Once logged in, click on CPT UI on the left hand side and then Import/Export Post Types.
-3. Copy the JSON in Export Post Types
-4. Go back to your local version of Wordpress at http://localhost:3000 and click on CPT UI
-5. Paste that into Import Post Types and then Import. If there is an error here, it's fine, just tap in #webdev and we can see what's up.
+1. Get Mica or John to give you a login to the staging site. They can be Slacked.
+2. Log in to the staging site and navigate to **Tools** > **Migrate DB**.
+3. Click on the **Settings** tab and copy the contents of the **Connection Info** box.
+4. **Go back to your local WP admin** and navigate to the same place: **Tools** > **Migrate DB**.
+5. Select the **Pull** radio button and paste the **Connection Info** you just copied into the box. This should prompt a connection attempt, which will display two **Find/Replace** fields:
+  1. `//ameyapawar2018.staging.wpengine.com` should be replaced with `//localhost:8000` - **NOT `localhost:3000`!**
+  2. `/nas/content/staging/ameyapawar2018` should be replaced with `/var/www/html`
+6. Click the **Migrate DB** button at the bottom of the screen and let the migration happen.
 
 This next part is going to be pretty hit or miss. We have to figure out how to import the larger-than-the-max staging XML file.
 
